@@ -27,7 +27,7 @@ def get_mnemonic():
 
     prompt = f"I am learning the Japanese Kanji '{character}' which means '{meaning}'."
     prompt += f"I have visually broken it down into these parts/shapes: {parts}."
-    prompt += f"Create a short, memorable, and vivid mnemonic story (max 2 sentences) that links these parts together to explain the meaning '{meaning}'."
+    prompt += f"Create a short, memorable, and vivid mnemonic story (max 1 sentence) that links these parts together to explain the meaning '{meaning}'."
     prompt += f"The tone should be helpful and slightly imaginative."
 
     response = client.models.generate_content(
@@ -38,14 +38,17 @@ def get_mnemonic():
 @app.route('/imagen', methods=['POST'])
 def get_imagen():
   body = request.get_json()
+  character = body.get('character')
   mnemonic = body.get('mnemonic')
   image = body.get('image')
-  if not mnemonic or not image:
+  if not character or not mnemonic or not image:
       return {"error": "Missing required parameters."}, 400
-  prompt = f"Modify the image provided of a Kanji character to provide a realistic visualization of the mnemonic: \"{mnemonic}\"."
-  prompt += f"The original Kanji in the image should be present. Only modifications should be made to it, no deletions."
-  prompt += f"Style: Minimalistic, flat, clean."
-
+  prompt = f"I have uploaded an image of the Kanji [{character}]."
+  prompt += f"Modify this image by overlaying stylized depictions of its component parts directly over their corresponding positions in the character."
+  prompt += f"You are making semi-transparent illustrations to overlay the original grey character. Do not replace the original illustration."
+  prompt += f"Use a soft watercolor style for the overlays"
+  prompt += f"Remove the labels. Align the new graphics perfectly with the character's structure."
+  prompt += f"Use the following mnemonic to guide the illustration: '{mnemonic}'."
   response = client.models.generate_content(
     model="gemini-2.5-flash-image", 
     contents=[prompt, image]
