@@ -48,9 +48,10 @@ def get_imagen():
   prompt += f"You are making semi-transparent illustrations to overlay the original grey character. Do not replace the original illustration."
   prompt += f"Use a soft watercolor style for the overlays"
   prompt += f"Remove the labels. Align the new graphics perfectly with the character's structure."
+  prompt += f"Maintain the positioning of the original character."
   prompt += f"Use the following mnemonic to guide the illustration: '{mnemonic}'."
   response = client.models.generate_content(
-    model="gemini-2.5-flash-image", 
+    model="gemini-2.5-flash-image", #gemini-3-pro-image-preview
     contents=[prompt, image]
   )
   
